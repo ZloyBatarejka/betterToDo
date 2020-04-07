@@ -13,7 +13,7 @@ const Item = ({ post, posts }) => {
     const newPosts = posts.filter((item) => {
       return item.id !== post.id;
     });
-    dispatch(deletePost(newPosts, post.id));
+    dispatch(deletePost(newPosts, post.url));
   };
   const handleDoneChange = () => {
     const newPosts = posts.filter((item) => {
@@ -24,7 +24,7 @@ const Item = ({ post, posts }) => {
       }
       return toChange;
     });
-    dispatch(completePost(newPosts, post.id, post));
+    dispatch(completePost(newPosts, post, post.url));
   };
   return (
     <div className="item">

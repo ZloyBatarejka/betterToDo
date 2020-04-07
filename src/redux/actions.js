@@ -33,47 +33,53 @@ export function finishLoading() {
     type: HIDE_LOADER,
   };
 }
-export function createPost(post) {
-  try {
-    axios.post(`${URL}`, post);
-  } catch (e) {
-    showAlert('Data problems');
-  }
-  return {
-    type: CREATE_POST,
-    payload: post,
-  };
-}
-export function deletePost(posts, id) {
-  try {
-    axios.delete(`${URL}/${id}`);
-  } catch (e) {
-    showAlert('Data problems');
-  }
-  return {
-    type: DELETE_POST,
-    payload: posts,
-  };
-}
-export function completePost(posts, id, post) {
-  try {
-    axios.patch(`${URL}/${id}`, post);
-  } catch (e) {
-    showAlert('Data problems');
-  }
-  return {
-    type: COMPLETE_POST,
-    payload: posts,
-  };
-}
-
 export function getData() {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`${URL}`);
-      const data = await response.data;
+      const response = await axios.get(`${URL}.json`);
+      const data = Array.from(Object.entries(response.data)).map((item) => {
+        const post = item[1];
+        post.url = item[0];
+        return post;
+      });
       dispatch({ type: GET_DATA, payload: data });
       dispatch(finishLoading());
+    } catch (e) {
+      dispatch({ type: GET_DATA, payload: [] });
+      dispatch(finishLoading());
+      showAlert('Data problems');
+    }
+  };
+}
+
+export function createPost(post) {
+  return async (dispatch) => {
+    try {
+      await axios.post(`${URL}.json`, post);
+      dispatch({ type: CREATE_POST, payload: post });
+      dispatch(getData());
+    } catch (e) {
+      showAlert('Data problems');
+    }
+  };
+}
+export function deletePost(posts, url) {
+  return async (dispatch) => {
+    try {
+      await axios.delete(`${URL}/${url}.json`);
+      dispatch({ type: DELETE_POST, payload: posts });
+      dispatch(getData());
+    } catch (e) {
+      showAlert('Data problems');
+    }
+  };
+}
+export function completePost(posts, post, url) {
+  return async (dispatch) => {
+    try {
+      await axios.patch(`${URL}/${url}.json`, post);
+      dispatch({ type: COMPLETE_POST, payload: posts });
+      dispatch(getData());
     } catch (e) {
       showAlert('Data problems');
     }
