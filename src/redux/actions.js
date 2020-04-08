@@ -47,7 +47,7 @@ export function getData() {
     } catch (e) {
       dispatch({ type: GET_DATA, payload: [] });
       dispatch(finishLoading());
-      showAlert('Data problems');
+      dispatch(showAlert('Data problems'));
     }
   };
 }
@@ -59,7 +59,7 @@ export function createPost(post) {
       dispatch({ type: CREATE_POST, payload: post }); // зарегать изменнения
       dispatch(getData());
     } catch (e) {
-      showAlert('Data problems');
+      dispatch(showAlert('Data problems'));
       dispatch({ type: CREATE_POST, payload: post });
     }
   };
@@ -71,7 +71,7 @@ export function deletePost(posts, url) {
       dispatch({ type: DELETE_POST, payload: posts });
       dispatch(getData());
     } catch (e) {
-      showAlert('Data problems');
+      dispatch(showAlert('Data problems'));
       dispatch({ type: DELETE_POST, payload: posts });
     }
   };
@@ -83,7 +83,7 @@ export function completePost(posts, post, url) {
       dispatch({ type: COMPLETE_POST, payload: posts });
       dispatch(getData());
     } catch (e) {
-      showAlert('Data problems');
+      dispatch(showAlert('Data problems'));
       dispatch({ type: COMPLETE_POST, payload: posts });
     }
   };
