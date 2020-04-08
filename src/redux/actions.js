@@ -55,11 +55,12 @@ export function getData() {
 export function createPost(post) {
   return async (dispatch) => {
     try {
-      await axios.post(`${URL}.json`, post);
-      dispatch({ type: CREATE_POST, payload: post });
+      await axios.post(`${URL}.json`, post); // Если работать исключительно с локальным стейтом, БД иногда не успевает
+      dispatch({ type: CREATE_POST, payload: post }); // зарегать изменнения
       dispatch(getData());
     } catch (e) {
       showAlert('Data problems');
+      dispatch({ type: CREATE_POST, payload: post });
     }
   };
 }
@@ -71,6 +72,7 @@ export function deletePost(posts, url) {
       dispatch(getData());
     } catch (e) {
       showAlert('Data problems');
+      dispatch({ type: DELETE_POST, payload: posts });
     }
   };
 }
@@ -82,6 +84,7 @@ export function completePost(posts, post, url) {
       dispatch(getData());
     } catch (e) {
       showAlert('Data problems');
+      dispatch({ type: COMPLETE_POST, payload: posts });
     }
   };
 }
